@@ -7,7 +7,12 @@ namespace ATM_Machine
         public static void Main(string[] args)
         {
             CardHolder obj1 = new CardHolder("John", "Cena", "123456789", "000000");
+            CardHolder obj2 = new CardHolder("Lean", "Jolyn","246781357", "111111");
             int numberOfErrors=0;
+            Dictionary<String, CardHolder> cardHolderDict= new Dictionary<String, CardHolder>();
+            cardHolderDict.Add(obj1.getCardNumber(), obj1);
+            cardHolderDict.Add(obj2.getCardNumber(), obj2);
+            CardHolder currUser;
             while (true)
             {
                 Console.WriteLine("Enter your card number");
@@ -17,15 +22,16 @@ namespace ATM_Machine
                     Console.WriteLine("Too many times error. Enter any key to leave");
                     Environment.Exit(0);
                 }
-                if (enteredCard !=obj1.getCardNumber())
+                if (!cardHolderDict.ContainsKey(enteredCard))
                 {
                     Console.WriteLine("Wrong card number, please try again");
                     numberOfErrors++;
                     continue;
                 }
-
+                currUser = cardHolderDict[enteredCard];
                 break;
             }
+            
             numberOfErrors = 0;
             while (true)
             {
@@ -36,7 +42,7 @@ namespace ATM_Machine
                     Console.WriteLine("Too many times error. Enter any key to leave");
                     Environment.Exit(0);
                 }
-                if (enteredPin != obj1.getPin())
+                if (enteredPin != currUser.getPin())
                 {
                     Console.WriteLine("Wrong pin number, please try again");
                     numberOfErrors++;
@@ -46,7 +52,7 @@ namespace ATM_Machine
             }
             while (true)
             {
-                Console.WriteLine($"Welcome {obj1.getCardHolderName()} ! What can I help you today?");
+                Console.WriteLine($"Welcome {currUser.getCardHolderName()} ! What can I help you today?");
                 Console.WriteLine("1. Check Balance");
                 Console.WriteLine("2. Withdraw");
                 Console.WriteLine("3. Deposit");
@@ -57,7 +63,7 @@ namespace ATM_Machine
                 switch (option)
                 {
                     case 1:
-                        obj1.checkBalance();
+                        currUser.checkBalance();
                         break;
                     case 2:
                         Console.WriteLine("Please Enter amount you want to withdraw");
@@ -66,7 +72,7 @@ namespace ATM_Machine
                         {
                             amount= Convert.ToDouble(input);
                         }
-                        obj1.withdraw(amount);
+                        currUser.withdraw(amount);
                         break;
                     case 3:
                         Console.WriteLine("Please Enter amount you want to withdraw");
@@ -75,7 +81,7 @@ namespace ATM_Machine
                         {
                             amount = Convert.ToDouble(input);
                         }
-                        obj1.deposit(amount);
+                        currUser.deposit(amount);
                         break;
                     case 4:
                         Environment.Exit(0);
